@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:s_youtube_webview/Components/navigation.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -10,11 +12,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late WebViewController controller;
+  late WebViewController _controller;
+
+
   double _progress = 0;
   @override
   void initState() {
-    controller = WebViewController()
+    super.initState();
+    // late final PlatformWebViewControllerCreationParams params;
+    //  if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+    //     params = WebKitWebViewControllerCreationParams(
+    //       allowsInlineMediaPlayback: true,
+    //       mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+    //     );
+    //   } else {
+    //     params = const PlatformWebViewControllerCreationParams();
+    //   }
+    // final WebViewController controller = WebViewController.fromPlatformCreationParams(params);
+
+    _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
@@ -45,8 +61,18 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       )
       ..loadRequest(Uri.parse('https://www.youtube.com/'));
+
+    // #docregion platform_features
+    // if (controller.platform is AndroidWebViewController) {
+    //   AndroidWebViewController.enableDebugging(true);
+    //   (controller.platform as AndroidWebViewController)
+    //       .setMediaPlaybackRequiresUserGesture(false);
+    // }
+    // #enddocregion platform_features
+
+    // _controller = controller;
     // TODO: implement initState
-    super.initState();
+
   }
 
   @override
@@ -55,11 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
       //  extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),    
+        title: Text(widget.title),
         actions: [
           NavigationControls(
-                webViewController: controller,
-              )
+            webViewController: _controller,
+          ),
         ],
         // Progress Indicator
         bottom: PreferredSize(
@@ -74,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: [
-          WebViewWidget(controller: controller),
+          WebViewWidget(controller: _controller),
         ],
       ),
     );

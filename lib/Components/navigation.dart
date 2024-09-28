@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:s_youtube_webview/Screen/settings.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class NavigationControls extends StatelessWidget {
@@ -63,7 +64,24 @@ class NavigationControls extends StatelessWidget {
                   Icons.replay,
                   color: iconColor,
                 ),
-                onPressed: () => webViewController.reload(),
+                onPressed: webViewController.reload,
+              ),
+              // // Clear Cookies
+              // IconButton(
+              //   icon: Icon(
+              //     Icons.delete_forever_rounded,
+              //     color: iconColor,
+              //   ),
+              //   onPressed: () => _showMyDialog(context, webViewController),
+              // ),
+              IconButton(
+                icon: Icon(
+                  Icons.settings_outlined,
+                  color: iconColor,
+                ),
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Settings(webViewController: webViewController,))
+                ),
               ),
             ],
           ),
@@ -72,3 +90,5 @@ class NavigationControls extends StatelessWidget {
     );
   }
 }
+
+
