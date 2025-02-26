@@ -1,8 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:s_youtube_webview/Components/navigation.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart';
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -16,6 +16,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   double _progress = 0;
+  bool extendBody = false;
   @override
   void initState() {
     super.initState();
@@ -35,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
+
           onProgress: (int progress) {
             // Update loading bar.
             setState(() {
@@ -50,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               _progress = 0.0;
             });
+              _startScrollListener();
           },
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
@@ -75,18 +78,49 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
+  void _startScrollListener() {
+    Future.delayed(const Duration(milliseconds: 300), () async {
+      if (!mounted) return;
+
+      try {
+        String scrollY = await _controller.runJavaScriptReturningResult('window.scrollY.toString()') as String;
+        double scrollPosition = double.tryParse(scrollY.replaceAll('"', '')) ?? 0.0;
+
+        setState(() {
+          extendBody = scrollPosition > 50; // Adjust transparency
+        });
+      } catch (e) {
+        debugPrint("Error getting scroll position: $e");
+      }
+
+      _startScrollListener(); // Keep checking
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //  extendBodyBehindAppBar: true,
+
+      extendBodyBehindAppBar: extendBody,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        elevation: 0,
+        // backgroundColor: Theme.of(context).colorScheme.inversePrimary.withValues(alpha: 0.2,),
+        backgroundColor: Colors.white.withValues(alpha: 0.7),
         title: Text(widget.title),
+        centerTitle: false,
         actions: [
           NavigationControls(
             webViewController: _controller,
           ),
         ],
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+            child: Container(
+              color: Colors.transparent,
+            ),
+          ),
+        ),
         // Progress Indicator
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(6.0),
@@ -98,11 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-        ],
-      ),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }

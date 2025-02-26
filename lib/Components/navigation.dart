@@ -7,7 +7,8 @@ class NavigationControls extends StatelessWidget {
   const NavigationControls({super.key, required this.webViewController});
   final WebViewController webViewController; // Controller required for navigation back and forth and from page refresh
   final Color iconColor = Colors.black; // Icon color changes here
-  Color containerBackground(BuildContext context) => Theme.of(context).colorScheme.inversePrimary.withOpacity(1); // the navigation container background Color here
+  
+  Color containerBackground(BuildContext context) => Theme.of(context).colorScheme.inversePrimary.withValues(); // the navigation container background Color here
 
   @override
   Widget build(BuildContext context) {

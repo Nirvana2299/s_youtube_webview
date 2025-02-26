@@ -12,23 +12,26 @@ class Settings extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Settings'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                ListTile(
-                  title: const Text('Reset Cache'),
-                  subtitle: const Text('delete all the data'),
-                  onTap: () => _showMyDialog(context ,webViewController ),
-                  trailing: Icon(Icons.delete_forever_rounded, color: Colors.deepOrange[900]),
-                ),
-              ],
-            ),
-            const Text('Made with 💗 by Shoaib')
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                spacing: 8,
+                children: [
+                  ListTile(
+                    title: const Text('Reset Cache'),
+                    subtitle: const Text('delete all the data'),
+                    onTap: () => _showMyDialog(context ,webViewController ),
+                    trailing: Icon(Icons.delete_forever_rounded, color: Colors.deepOrange[900]),
+                  ),
+                ],
+              ),
+              const Text('Made with 💗 by Shoaib')
+            ],
+          ),
         ),
       ),
     );
